@@ -4,7 +4,7 @@ export default function Home() {
       <div className="bg-white max-w-screen-sm flex flex-col md:flex-row gap-2 w-full shadow-lg p-5 rounded-3xl">
         <input
           type="text"
-          placeholder="Search here"
+          placeholder="Search"
           className="w-full rounded-full p-3 bg-gray-200 pl-5 outline-none ring ring-transparent focus:ring-orange-500 focus:ring-offset-2 transition-shadow "
         />
         <button className="bg-black text-white py-2 rounded-full active:scale-90 focus:scale-90 transition-transform font-medium outline-none md:px-10">
