@@ -27,7 +27,7 @@ const formSchema = z
         invalid_type_error: "Username must be a string !",
         required_error: "Whare is my Username ?!",
       })
-      .toLowerCase()
+      // .toLowerCase()
       .trim()
       .refine(checkUsername, "No potatoes allowed"),
 
