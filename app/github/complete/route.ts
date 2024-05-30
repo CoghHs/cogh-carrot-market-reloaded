@@ -1,9 +1,10 @@
 import db from "@/lib/db";
 import getAccessToken from "@/lib/github/getAccessToken";
+import getGithubEmail from "@/lib/github/getGithubEmail";
 import getGithubProfile from "@/lib/github/getGithubProfile";
-import getSession from "@/lib/session";
+import isExistUsername from "@/lib/isExistUsername";
 import LogIn from "@/lib/utils";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -20,9 +21,10 @@ export async function GET(request: NextRequest) {
     });
   }
   const { id, login, avatar_url } = await getGithubProfile(access_token);
-  const user = await db.user.findUnique({
+  const email = await getGithubEmail(access_token);
+  const user = await db.user.findFirst({
     where: {
-      github_id: id + "",
+      OR: [{ email: email ?? "" }, { github_id: id + "" }],
     },
     select: {
       id: true,
@@ -32,12 +34,13 @@ export async function GET(request: NextRequest) {
     await LogIn(user.id);
     return redirect("/profile");
   }
-
+  const isExist = await isExistUsername(login);
   const newUser = await db.user.create({
     data: {
-      username: login,
+      username: isExist ? `${login}-gh` : login,
       github_id: id + "",
       avatar: avatar_url,
+      email,
     },
     select: {
       id: true,
